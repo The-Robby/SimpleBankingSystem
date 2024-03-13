@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-form">
+            <h1>Welcome {{ account['username'] }}!</h1>
+            <p>Your account balance is ${{ account['balance'] }}</p>
+            <h2>Deposit Money</h2>
+            <form action="/deposit" method="post">
+                <input type="hidden" name="account_number" value="{{ account['account_number'] }}">
+                <label for="amount">Amount:</label><br>
+                <input type="text" id="amount" name="amount"><br>
+                <button type="submit" value="Deposit">Deposit</button>
+            </form>
+            <h2>Withdraw Money</h2>
+            <form action="/withdraw" method="post">
+                <input type="hidden" name="account_number" value="{{ account['account_number'] }}">
+                <label for="amount_withdraw">Amount:</label><br>
+                <input type="text" id="amount_withdraw" name="amount_withdraw"><br>
+                <button type="submit" value="Withdraw">Withdraw</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
