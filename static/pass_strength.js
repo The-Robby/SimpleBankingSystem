@@ -19,27 +19,9 @@ document.getElementById("password").addEventListener("input", function() {
         strength += 1;
     }
 
-    switch(strength) {
-        case 0:
-            strengthBar.style.width = "0%";
-            break;
-        case 1:
-            strengthBar.style.width = "20%";
-            break;
-        case 2:
-            strengthBar.style.width = "40%";
-            break;
-        case 3:
-            strengthBar.style.width = "60%";
-            break;
-        case 4:
-            strengthBar.style.width = "80%";
-            break;
-        case 5:
-            strengthBar.style.width = "100%";
-            break;
-        case 6:
-            strengthBar.style.width = "120%";
-            break;
-    }
+    var width = strength * 20;
+
+    strengthBar.style.transition = "width 0.3s ease";
+    strengthBar.style.width = width + "%";
+
 });
