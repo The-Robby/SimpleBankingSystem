@@ -91,15 +91,16 @@ def dashboard():
 def deposit():
     if 'account' in session:
         account = session['account']
-        if request.form['amount'] == '':
+        if request.form['amount'] == '' or not request.form['amount'].replace('.', '').replace(',', '').isdigit():
             return render_template('dashboard.html', depositempty=True, account=account)
-        amount = float(request.form['amount'])
+        flamount = float(request.form['amount'].replace(',', '.'))
+        amount = round(flamount, 2)
 
 
         for acc in accounts:
             if account['account_number'] == acc['account_number']:
                 acc['balance'] += amount
-                new_amount = acc['balance']
+                new_amount = round(acc['balance'],2)
                 session['account'] = acc
                 return render_template('deposit.html', deposit=True, account=account, amount=amount, new_amount = new_amount)
     
@@ -109,15 +110,16 @@ def deposit():
 def withdraw():
     if 'account' in session:
         account = session['account']
-        if request.form['amount_withdraw'] == '':
+        if request.form['amount_withdraw'] == '' or not request.form['amount_withdraw'].replace('.', '').replace(',', '').isdigit():
             return render_template('dashboard.html', withdrawempty=True, account=account)
-        amount = float(request.form['amount_withdraw'])
+        flamount = float(request.form['amount_withdraw'].replace(',', '.'))
+        amount = round(flamount, 2)
 
         for acc in accounts:
             if account['account_number'] == acc['account_number']:
                 if acc['balance'] - amount >= 0:
                     acc['balance'] -= amount
-                    new_amount = acc['balance']
+                    new_amount = round(acc['balance'],2)
                     session['account'] = acc
                     return render_template('deposit.html', deposit=False, account=account, amount=amount, new_amount = new_amount)
                 else:
