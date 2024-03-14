@@ -33,7 +33,7 @@ def register():
             accounts.append({'account_number': account_number, 'username': username, 'password': password, 'balance': 100.0})
             return redirect(url_for('index'))
         else:
-            return "Invalid password! Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 digit, 1 special character, and be between 6 and 12 characters long."
+            return render_template("fregister.html")
 
     return render_template("register.html")
 
