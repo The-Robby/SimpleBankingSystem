@@ -9,16 +9,46 @@
 <body>
     <div class="login-container">
         <div class="login-form">
+        {% if register %}
+        <form action="/register" method="post">
+        {% else %}
         <form action="/login" method="post">
+        {% endif %}
+            {% if register %}
+            <h2>Register</h2>
+            {% else %}
             <h2>Login</h2>
+            {% endif %}
             <label for="username">Username</label>
             <input type="text" id="username" name="username" required>
             
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
-            
+
+            {% if register %}
+            <div class="progress">
+                <div class="progress-bar" id="strength"></div>
+            </div>
+            <button type="submit">Register</button>
+            <script src="{{ url_for('static', filename='pass_strength.js') }}"></script>
+            {% else %}
             <button type="submit">Login</button>
+            {% endif %}
+
         </form>
+        {% if register and wrongpass%}
+        <fail>Seems that your password does not meet security expectations!<br>Your password must have 1 uppercase, 1 lowercase, 1 digit, 1 special character and between 6 and 12 long.</fail>
+        {% endif %}
+
+        {% if register and wrongname%}
+        <fail>Seems that {{username}} already exists! Chose another username!</fail>
+        {% endif %}
+
+        {% if wrongcredentials %}
+        <fail>Your credentials seem wrong! Try again!</fail>
+        {% endif %}
+
+        <a href="/">Back</a>
         </div>
     </div>
 </body>

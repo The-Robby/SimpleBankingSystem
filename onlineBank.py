@@ -20,8 +20,14 @@ def login():
             if account['username'] == username and account['password'] == password:
                 session['account'] = account
                 return redirect(url_for('dashboard'))
-        return render_template("flogin.html")
+        return render_template("login.html", wrongcredentials=True)
     return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    if 'account' in session:
+        session.pop('account')
+    return redirect(url_for('index'))
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -29,13 +35,19 @@ def register():
         username = request.form['username']
         password = request.form['password']
         if Bank.check_pass_cond(password):
-            account_number = len(accounts) + 1
-            accounts.append({'account_number': account_number, 'username': username, 'password': password, 'balance': 100.0})
-            return redirect(url_for('index'))
+            check = 1
+            for acc in accounts:
+                if acc['username'] == username:
+                    check -= 1
+                    return render_template("login.html", register=True, wrongname=True, username=username)
+            if check == 1:    
+                account_number = len(accounts) + 1
+                accounts.append({'account_number': account_number, 'username': username, 'password': password, 'balance': 100.0})
+                return redirect(url_for('index'))
         else:
-            return render_template("fregister.html")
+            return render_template("login.html", register=True, wrongpass=True)
 
-    return render_template("register.html")
+    return render_template("login.html", register=True)
 
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
@@ -47,31 +59,38 @@ def dashboard():
 @app.route('/deposit', methods=['POST'])
 def deposit():
     if 'account' in session:
-        amount = float(request.form['amount'])
         account = session['account']
+        if request.form['amount'] == '':
+            return render_template('dashboard.html', depositempty=True, account=account)
+        amount = float(request.form['amount'])
+
 
         for acc in accounts:
             if account['account_number'] == acc['account_number']:
                 acc['balance'] += amount
+                new_amount = acc['balance']
                 session['account'] = acc
-                return render_template('deposit.html', account=account, amount=amount)
+                return render_template('deposit.html', deposit=True, account=account, amount=amount, new_amount = new_amount)
     
     return redirect(url_for('login'))
 
 @app.route('/withdraw', methods=['POST'])
 def withdraw():
     if 'account' in session:
-        amount = float(request.form['amount_withdraw'])
         account = session['account']
+        if request.form['amount_withdraw'] == '':
+            return render_template('dashboard.html', withdrawempty=True, account=account)
+        amount = float(request.form['amount_withdraw'])
 
         for acc in accounts:
             if account['account_number'] == acc['account_number']:
                 if acc['balance'] - amount >= 0:
                     acc['balance'] -= amount
+                    new_amount = acc['balance']
                     session['account'] = acc
-                    return render_template('deposit.html', account=account, amount=amount)
+                    return render_template('deposit.html', deposit=False, account=account, amount=amount, new_amount = new_amount)
                 else:
-                    return "Not enough money to withdraw!"
+                    return render_template('dashboard.html', account=account, amount=amount, error=True)
     
     return redirect(url_for('login'))
 

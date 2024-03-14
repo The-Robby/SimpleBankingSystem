@@ -9,8 +9,12 @@
     <div class="login-container">
         <div class="login-form">
             <h1>Welcome {{ account['username'] }}!</h1>
-            <p>Your account balance is ${{ account['balance'] }}</p>
-            <h2>You Succesfully deposited ${{ amount }}</h2>
+            <p>Your new account balance is ${{ new_amount }}</p>
+            {% if deposit %}
+            <h2>You succesfully deposited ${{ amount }}</h2>
+            {% else %}
+            <h2>You succesfully withdrawed ${{ amount }}</h2>
+            {% endif %}
             <a action="/login" href="dashboard">Back to dashboard</a>
         </div>
     </div>

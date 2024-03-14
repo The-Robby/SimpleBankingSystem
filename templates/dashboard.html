@@ -13,17 +13,27 @@
             <h2>Deposit Money</h2>
             <form action="/deposit" method="post">
                 <input type="hidden" name="account_number" value="{{ account['account_number'] }}">
-                <label for="amount">Amount:</label><br>
+                <label for="amount">Amount:</label>
                 <input type="text" id="amount" name="amount"><br>
                 <button type="submit" value="Deposit">Deposit</button>
             </form>
+            {% if depositempty %}
+            <fail>Please fill in a number</fail>
+            {% endif %}
             <h2>Withdraw Money</h2>
             <form action="/withdraw" method="post">
                 <input type="hidden" name="account_number" value="{{ account['account_number'] }}">
-                <label for="amount_withdraw">Amount:</label><br>
+                <label for="amount_withdraw">Amount:</label>
                 <input type="text" id="amount_withdraw" name="amount_withdraw"><br>
                 <button type="submit" value="Withdraw">Withdraw</button>
             </form>
+            {% if error %}
+            <fail>Seems your balance is insufficient! Withdraw failed.</fail>
+            {% endif %}
+            {% if withdrawempty %}
+            <fail>Please fill in a number</fail>
+            {% endif %}
+            <a href="logout">Log Out</a>
         </div>
     </div>
 </body>
