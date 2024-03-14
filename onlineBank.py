@@ -20,7 +20,7 @@ def login():
             if account['username'] == username and account['password'] == password:
                 session['account'] = account
                 return redirect(url_for('dashboard'))
-        return "Invalid username or password!"
+        return render_template("flogin.html")
     return render_template("login.html")
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -66,9 +66,12 @@ def withdraw():
 
         for acc in accounts:
             if account['account_number'] == acc['account_number']:
-                acc['balance'] -= amount
-                session['account'] = acc
-                return render_template('deposit.html', account=account, amount=amount)
+                if acc['balance'] - amount >= 0:
+                    acc['balance'] -= amount
+                    session['account'] = acc
+                    return render_template('deposit.html', account=account, amount=amount)
+                else:
+                    return "Not enough money to withdraw!"
     
     return redirect(url_for('login'))
 
