@@ -1,4 +1,4 @@
-import Bank
+import func
 from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__, static_folder="static")
@@ -19,7 +19,7 @@ def login():
         if username == 'debug':
             return accounts
         for account in accounts:
-            if account['username'] == username and account['password'] == password:
+            if account['username'] == username and func.check_password(account, password):
                 session['account'] = account
                 return redirect(url_for('dashboard'))
         return render_template("login.html", wrongcredentials=True)
@@ -36,7 +36,7 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if Bank.check_pass_cond(password):
+        if func.check_pass_cond(password):
             check = 1
             for acc in accounts:
                 if acc['username'] == username:
@@ -44,7 +44,7 @@ def register():
                     return render_template("login.html", register=True, wrongname=True, username=username)
             if check == 1:    
                 account_number = len(accounts) + 1
-                accounts.append({'account_number': account_number, 'username': username, 'password': password, 'balance': 100.0})
+                accounts.append({'account_number': account_number, 'username': username, 'password': func.store_pass(password), 'balance': 100.0})
                 return redirect(url_for('index'))
         else:
             return render_template("login.html", register=True, wrongpass=True)
